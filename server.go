@@ -8,7 +8,9 @@ import (
 	"fmt"
 )
 
-var key []byte = RandomKey(16)
+const keysize = 16
+
+var key []byte = RandomKey(keysize)
 
 func SecretPhrase(w http.ResponseWriter, r *http.Request) {
         unknown := "Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkg\n" +
@@ -25,7 +27,7 @@ func SecretPhrase(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Input:", data)
         decoded, _ := base64.StdEncoding.DecodeString(unknown)
         amended := append([]byte(data), decoded...)
-        padded := AddPadding(amended, 16)
+        padded := AddPadding(amended, keysize)
 
         w.Write(ECBEncrypt(key, padded))
 }
@@ -42,7 +44,7 @@ func CreateSession(w http.ResponseWriter, r *http.Request) {
 	profile.Set("uid", "10")
 	profile.Set("zole", "user")
 
-	padded := AddPadding([]byte(profile.Encode()), 16)
+	padded := AddPadding([]byte(profile.Encode()), keysize)
 	encoded := base64.StdEncoding.EncodeToString(ECBEncrypt(key, padded))
 	cookie := &http.Cookie{Name: "profile", Value: encoded}
 	http.SetCookie(w, cookie)
