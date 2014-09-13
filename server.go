@@ -12,6 +12,9 @@ const keysize = 16
 
 var key []byte = RandomKey(keysize)
 
+// Challenge 12
+// Appends an unknown string to  user data from the GET variable "input".
+// Encrypts the result and returns it.
 func SecretPhrase(w http.ResponseWriter, r *http.Request) {
         unknown := "Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkg\n" +
                 "aGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBq\n" +
@@ -32,6 +35,11 @@ func SecretPhrase(w http.ResponseWriter, r *http.Request) {
         w.Write(ECBEncrypt(key, padded))
 }
 
+// Challenge 13
+// Create a user profile based on the GET variable "email".
+// Encrypt the encoded profile and store it in the "profile" cookie.
+// Note: We use "zole" instead of "role" because Go alphabetizes encoded parameters
+// which breaks this.
 func CreateSession(w http.ResponseWriter, r *http.Request) {
 	getVars, err := url.ParseQuery(r.URL.RawQuery)
 	if err != nil {
@@ -51,6 +59,8 @@ func CreateSession(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Created"))
 }
 
+// Challenge 13
+// Return the decrypted profile cookie
 func GetSession(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("profile")
 	if err != nil {
