@@ -57,7 +57,7 @@ func VerifyPadding(data []byte) bool {
 	for i, _ := range expectedPadding {
 		expectedPadding[i] = pads
 	}
-	return bytes.Equal(expectedPadding, data[length-int(pads):length-1])
+	return bytes.Equal(expectedPadding, data[length-int(pads):length])
 }
 
 func RandomKey(length int) []byte {
